@@ -1,3 +1,102 @@
+
+// ==========================================
+// HELALGUARD SMART - BOYKOT TESPİT MOTORU
+// ==========================================
+
+const boycottBrands = {
+  "COCA-COLA": "İsrail bağlantılı/destekçi küresel marka",
+  "COCA COLA": "İsrail bağlantılı/destekçi küresel marka",
+  "FANTA": "Coca-Cola Company bünyesinde",
+  "SPRITE": "Coca-Cola Company bünyesinde",
+  "FUSETEA": "Coca-Cola Company bünyesinde",
+  "PEPSI": "İsrail bağlantılı/destekçi küresel marka",
+  "LAYS": "PepsiCo bünyesinde",
+  "DORITOS": "PepsiCo bünyesinde",
+  "RUFFLES": "PepsiCo bünyesinde",
+  "LIPTON": "PepsiCo / Unilever ortaklığı",
+  "NESTLE": "İsrail merkezli tesis/yatırım bağlantılı",
+  "NESCAFE": "Nestlé bünyesinde",
+  "DANONE": "İsrail bağlantılı gıda üreticisi",
+  "ACTIVIA": "Danone bünyesinde",
+  "STRAUSS": "İsrail merkezli gıda holdingi",
+  "TNOUVA": "İsrail merkezli gıda şirketi",
+  "SBUX": "Starbucks bağlantılı",
+  "STARBUCKS": "İsrail bağlantılı/destekçi kurum"
+};
+
+function checkBoycottStatus(brandName, productName) {
+  if (!brandName && !productName) return "";
+  let searchStr = ((brandName || "") + " " + (productName || "")).toUpperCase();
+  
+  for (let brand in boycottBrands) {
+    if (searchStr.includes(brand)) {
+      return `<div style="margin-top:10px; background:#eb4d4b; color:#ffffff; padding:12px; border-radius:10px; font-weight:bold; text-align:center; box-shadow:0 3px 6px rgba(0,0,0,0.2);">
+        🚫 <b>BOYKOTLU MARKA / ÜRÜN</b><br>
+        <span style="font-size:12px; font-weight:normal; opacity:0.9;">Açıklama: ${boycottBrands[brand]}</span>
+      </div>`;
+    }
+  }
+  return "";
+}
+
+
+// ==========================================
+// HELALGUARD PRO - ALERJEN VE HASSASİYET MOTORU
+// ==========================================
+
+const allergenDb = ["Gluten", "Buğday", "Süt", "Laktoz", "Soya", "Fındık", "Fıstık", "Yumurta", "Susam", "Kereviz", "Hardal"];
+
+function detectAllergens(text) {
+  if (!text) return "";
+  let found = [];
+  let upper = text.toUpperCase();
+  allergenDb.forEach(a => {
+    if (upper.includes(a.toUpperCase())) found.push(a);
+  });
+  if (found.length === 0) return "";
+  return `<div style="margin-top:10px; background:#fff3cd; color:#856404; padding:8px 12px; border-radius:8px; font-size:12px; font-weight:bold; border-left:4px solid #ffeeba;">
+    ⚠️ <b>Alerjen Uyarısı:</b> ${found.join(", ")} içeriyor olabilir.
+  </div>`;
+}
+
+function saveToHistory(productName, barcode, status) {
+  try {
+    let history = JSON.parse(localStorage.getItem("hg_history") || "[]");
+    history.unshift({ name: productName, code: barcode, status: status, date: new Date().toLocaleDateString("tr-TR") });
+    if (history.length > 30) history.pop();
+    localStorage.setItem("hg_history", JSON.stringify(history));
+  } catch(e) {}
+}
+
+
+// HelalGuard E-Kodu Analiz Motoru
+const eCodeDb = {
+  "E120": { name: "Karmin / Koşineal", status: "red", desc: "Böcekten elde edilen kırmızı renklendirici (Haram/Şüpheli)" },
+  "E441": { name: "Jelatin", status: "red", desc: "Sığır veya Domuz kaynaklı (Etikette Sığır belirtilmemişse Şüpheli/Haram)" },
+  "E471": { name: "Yağ Asitlerinin Mono ve Digliseritleri", status: "yellow", desc: "Bitkisel veya Hayvansal kaynaklı olabilir (Şüpheli)" },
+  "E472": { name: "Yağ Asitlerinin Esterleri", status: "yellow", desc: "Hayvansal yağ içerme riski var (Şüpheli)" },
+  "E100": { name: "Kurkumin", status: "green", desc: "Bitkisel Kökenli (Helal)" },
+  "E300": { name: "Askorbik Asit (C Vitamini)", status: "green", desc: "Güvenli / Sentetik-Bitkisel (Helal)" },
+  "E322": { name: "Lesitin", status: "green", desc: "Genellikle Soya/Bitkisel (Helal)" }
+};
+
+function renderECodeBadges(ingredientsText) {
+  if (!ingredientsText) return "";
+  let html = "<div style="margin-top:10px; display:flex; flex-wrap:wrap; gap:6px;">";
+  let found = false;
+  for (let code in eCodeDb) {
+    if (ingredientsText.toUpperCase().includes(code)) {
+      found = true;
+      let item = eCodeDb[code];
+      let bgColor = item.status === "red" ? "#ff4d4d" : item.status === "yellow" ? "#ffcc00" : "#2ed573";
+      let textColor = item.status === "yellow" ? "#000" : "#fff";
+      html += `<span style="background:${bgColor}; color:${textColor}; padding:4px 8px; border-radius:12px; font-size:12px; font-weight:bold;" title="${item.desc}">${code} - ${item.name}</span>`;
+    }
+  }
+  html += "</div>";
+  return found ? html : "";
+}
+
 'use strict';
 /* ---------------- i18n ---------------- */
 const I18N = {
