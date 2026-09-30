@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         webView = findViewById(R.id.webView)
         webView.settings.javaScriptEnabled = true
 
-        // Web arayüzü ile Android yerel kodunu bağlar
+        // Web arayüzünü Android yerel koduna bağlar
         webView.addJavascriptInterface(WebAppInterface(), "Native")
 
         webView.loadUrl("file:///android_asset/index.html")
