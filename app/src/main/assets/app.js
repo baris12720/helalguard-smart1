@@ -210,7 +210,7 @@ document.getElementById('barcodeBtn').addEventListener('click', async ()=>{
  if(!code){ toast(tr('toast_barcode_empty')); return; }
  area.innerHTML = `<div class="card" style="text-align:center;color:var(--sub)"><span class="spin" style="border-color:rgba(8,116,67,.25);border-top-color:var(--g)"></span>${esc(tr('looking_up'))}</div>`;
  try{
-  const resp = await fetch('https://world.openfoodfacts.org/api/v3/product/'+encodeURIComponent(code)+'.json', {method:'GET'});
+  const resp = await fetch("https://world.openfoodfacts.org/api/v0/product/" + encodeURIComponent(code) + ".json", { method: "GET", headers: { "User-Agent": "HelalGuard-AndroidApp/1.0" } });
   if(!resp.ok) throw new Error('http '+resp.status);
   const data = await resp.json();
   const p = data && data.product;
