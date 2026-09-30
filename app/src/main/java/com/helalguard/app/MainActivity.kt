@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
+import com.helalguard.smart.R
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         webView = findViewById(R.id.webView)
         webView.settings.javaScriptEnabled = true
 
-        // Web arayüzünü Android yerel koduna bağlar
+        // Web arayüzü ile Android yerel kodunu bağlar
         webView.addJavascriptInterface(WebAppInterface(), "Native")
 
         webView.loadUrl("file:///android_asset/index.html")
