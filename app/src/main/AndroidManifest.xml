@@ -2,8 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.helalguard.smart">
 
+    <!-- İNTERNET VE AĞ İZİNLERİ -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- KAMERA İZİNLERİ VE DONANIM BİLDİRİMİ -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -13,6 +19,7 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         
+        <!-- ANA EKRAN -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -21,6 +28,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- KAMERA / BARKOD TARAYICI EKRANI -->
+        <activity
+            android:name=".ScannerActivity"
+            android:exported="false" />
         
     </application>
 
